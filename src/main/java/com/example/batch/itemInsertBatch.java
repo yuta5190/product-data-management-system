@@ -78,7 +78,7 @@ public class itemInsertBatch {
 			item.setDescription(rs.getString("description"));
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			item.setInsertDate(timestamp);
-			item.setInsertUser("batch");
+			item.setInsertUser(0);
 			item.setItemImage("image_" + rs.getInt("id"));
 			itemList.add(item);
 		}
@@ -101,7 +101,7 @@ public class itemInsertBatch {
 			pstmt.setInt(7, item.getShipping());
 			pstmt.setString(8, item.getDescription());
 			pstmt.setTimestamp(9, item.getInsertDate());
-			pstmt.setString(10, item.getInsertUser());
+			pstmt.setInt(10, item.getInsertUser());
 			pstmt.addBatch();
 			if (++count % 1000 == 0) {
 				System.out.println(count);

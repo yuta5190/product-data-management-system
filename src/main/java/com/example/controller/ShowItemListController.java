@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -31,7 +30,7 @@ public class ShowItemListController {
 	private ShowItemListService showItemlistService;
 	@Autowired
 	private ShowCategoryListService showCategoryListService;
-	
+
 	/**
 	 * 画面表示＋大カテゴリーリスト表示
 	 * 
@@ -51,7 +50,6 @@ public class ShowItemListController {
 		return "list";
 	}
 
-	
 	/**
 	 * １ページ目表示、アイテム数による総ページ計算
 	 * 
@@ -74,7 +72,6 @@ public class ShowItemListController {
 		return firstPageData;
 	}
 
-	
 	/**
 	 * 表示ページに基づく商品リスト表示
 	 * 
@@ -95,7 +92,7 @@ public class ShowItemListController {
 			orderBy = "";
 		}
 		List<Item> itemList = showItemlistService.showItemList(page, search, parentCategory, childCategory,
-		grandChildCategory, brand, totalPage, orderBy);
+				grandChildCategory, brand, totalPage, orderBy);
 		Map<String, Object> data = new HashMap<>();
 		data.put("itemList", itemList);
 		return data;

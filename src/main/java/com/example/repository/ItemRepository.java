@@ -51,7 +51,7 @@ public class ItemRepository {
 		item.setDescription(rs.getString("description"));
 		item.setItemImage(rs.getString("item_image"));
 		item.setInsertDate(rs.getTimestamp("insert_date"));
-		item.setInsertUser(rs.getString("insert_user"));
+		item.setInsertUser(rs.getInt("insert_user"));
 		for (int j = rs.getInt("hierarchy"); j >=0 ; j--) {
 			Category category = new Category();
 			category.setCategoryName(rs.getString("category_name_" + j));

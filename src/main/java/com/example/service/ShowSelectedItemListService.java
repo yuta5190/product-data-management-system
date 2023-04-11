@@ -34,11 +34,11 @@ public class ShowSelectedItemListService {
 	public List<Item> showSelectedItemList(SelectItemForm form) {
 		Integer maxDepth = categoryRepository.findMaxDepth(); 
 		Category category = new Category();
-		if (form.getGrandChildCategoryId() != null) {
+		if (form.getGrandChildCategoryId() != 0) {
 			category = categoryRepository.findCategoryById(form.getGrandChildCategoryId());
-		} else if (form.getChildCategoryId() != null) {
+		} else if (form.getChildCategoryId() != 0) {
 			category = categoryRepository.findCategoryById(form.getChildCategoryId());
-		} else if (form.getParentCategoryId() != null) {
+		} else if (form.getParentCategoryId() != 0) {
 			category = categoryRepository.findCategoryById(form.getParentCategoryId());
 		}
 		List<Item> selectedItemList = itemRepository.findAllItem(maxDepth, 1, form.getItemName(), category,form.getBrand(), form.getSort());

@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 /**
  * 商品追加用フォーム
  * 
- * @author yuuta_000
+ * @author yoshida_yuuta
  *
  */
 public class AddItemForm {
@@ -36,13 +36,13 @@ public class AddItemForm {
 	/** 商品画像 */
 	private MultipartFile itemImage;
 	/** 更新者 */
-	private String insertUser;
+	private Integer insertUser;
 
 	public AddItemForm() {
 	}
 
 	public AddItemForm(Integer storeId, String name, double price, Integer categoryId, String brand, Integer condition,
-			String description, Integer shipping, MultipartFile itemImage, String insertUser) {
+			String description, Integer shipping, MultipartFile itemImage, Integer insertUser) {
 		super();
 		this.storeId = storeId;
 		this.name = name;
@@ -135,11 +135,11 @@ public class AddItemForm {
 		this.itemImage = itemImage;
 	}
 
-	public String getInsertUser() {
+	public Integer getInsertUser() {
 		return insertUser;
 	}
 
-	public void setInsertUser(String insertUser) {
+	public void setInsertUser(Integer insertUser) {
 		this.insertUser = insertUser;
 	}
 
