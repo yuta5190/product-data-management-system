@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- css -->
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous" />
+<link rel="stylesheet" href="/css/mercari.css" />
+
+<title>Rakus Items</title>
+</head>
+<body>
+	<!-- navbar -->
+	<nav class="navbar navbar-inverse">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" th:href="@{/showitemlist}">Rakus Items</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<div>
+				<ul class="nav navbar-nav navbar-right">
+					<li sec:authorize="hasRole('ROLE_USER')"><a
+						th:href="@{/login-user/logout}" id="logout">Logout&nbsp;<i
+							class="fa fa-power-off"></i></a></li>
+					<li sec:authorize="!isAuthenticated()"><a
+						th:href="@{/login-user}" id="login">Login&nbsp; <i
+							class="fa fa-power-on"></i></a></li>
+				</ul>
+				<p class="navbar-text navbar-right">
+					<span id="loginName" sec:authorize="hasRole('ROLE_USER')">user:
+						<span sec:authentication="principal.user.name">山田</span>
+					</span> <span id="logoutName" sec:authorize="!isAuthenticated()"> <span>Guest</span></span>
+				</p>
+			</div>
+		</div>
+	</nav>
+
+	<div id="main" class="container-fluid">
+		<!-- addItem link -->
+		<div id="addItemButton">
+			<form th:action="@{/additem/view}" method="get">
+				<button type="submit" class="btn btn-default">
+					<i class="fa fa-plus-square-o"></i> Add New Item
+				</button>
+				<h2>List</h2>
+			</form>
+
+
+		</div>
+
+		<!-- 検索フォーム -->
+		<div id="forms">
+			<form class="form-inline" role="form" th:action="@{/select/run}"
+				th:object="${selectItemForm}" method="post">
+				<div class="form-group">
+					<input type=text class="form-control" id="name"
+						placeholder="item name" th:field="*{itemName}" />
+				</div>
+				<div class="form-group">
+					<i class="fa fa-plus"></i>
+				</div>
+				<div class="form-group">
+					<select class="form-control" id="parentCategory"
+						th:field="*{parentCategoryId}">
+						<option th:value=null>-- parentCategory --</option>
+						<optgroup th:each="Category: ${parentCategoryList}">
+							<option th:text="${Category.categoryName}"
+								th:value="${Category.id}">parentCategory1</option>
+						</optgroup>
+					</select> <select class="form-control" id="childCategory"
+						th:field="*{childCategoryId}">
+						<option th:value=null>-- childCategory --</option>
+						<optgroup id="childAllCategory">
+							<option th:text="${childCategory.categoryName}" value=""
+								th:value="${childCategory.id}" id="childCategoryValue"
+								class="blind"></option>
+						</optgroup>
+					</select> <select class="form-control" name="category"
+						id="grandChildCategory" th:field="*{grandChildCategoryId}">
+						<option th:value=null>-- grandChild --</option>
+						<option th:text="${grandChildCategory.categoryName}" value=""
+							th:value="${grandChildCategory.id}" id="grandChildCategoryValue"></option>
+						<optgroup id="grandChildAllCategory">
+						</optgroup>
+					</select>
+				</div>
+				<div class="form-group">
+					<i class="fa fa-plus"></i>
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="brand"
+						th:field="*{brand}" />
+				</div>
+				<div class="form-group"></div>
+				<select class="form-control" id="sort" th:field="*{sort}">
+					<option value="id ">-- sort --</option>
+					<option value="item.name ">name asc</option>
+					<option value="item.name desc">name desc</option>
+					<option value="item.price ">price asc</option>
+					<option value="item.price desc">price desc</option>
+					<option value="item.shipping ">shipping asc</option>
+					<option value="item.shipping desc">shipping desc</option>
+					<option value="item.condition ">condition asc</option>
+					<option value="item.condition desc">condition desc</option>
+				</select>
+				<button type="submit" class="btn btn-default">
+					<i class="fa fa-angle-double-right"></i> search
+				</button>
+			</form>
+		</div>
+
+		<!-- pagination -->
+		<div class="pages">
+			<nav class="page-nav">
+				<ul class="pager">
+					<li class="previous"><a href="" id="previous" class="paging">&larr;
+							prev</a></li>
+					<li class="next"><a href="" id="next" class="paging">next
+							&rarr;</a></li>
+				</ul>
+			</nav>
+		</div>
+		<!-- table -->
+
+		<div class="table-responsive">
+			<div>
+				<table id="item-table" class="table table-hover table-condensed">
+					<thead>
+						<tr>
+							<th>name</th>
+							<th>price</th>
+							<th>category</th>
+							<th>brand</th>
+							<th>condition</th>
+						</tr>
+						<tr th:each="item:${itemList}" id="itemList">
+							<td class="item-name"><a
+								th:href="@{/showitemdetail?id=}+${item.id}"
+								th:text="${item.name}"></a></td>
+							<td class="item-price" th:text="${item.StringPrice}"></td>
+							<td class="item-category"><span
+								th:each="category, iterStat:${item.categoryDetail}"> <span
+									th:if="${!iterStat.first}">/</span><a href=""
+									th:text="${category.categoryName}"> </a></span></td>
+							<td class="item-brand"><a href="" th:text="${item.brand}"></a></td>
+							<td class="item-condition" th:text="${item.condition}"></td>
+						</tr>
+					</thead>
+					<tbody class=items>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- pagination -->
+		<div class="pages">
+			<nav class="page-nav">
+				<ul class="pager">
+					<li class="previous"><a href="" class="paging,previous">&larr;
+							prev</a></li>
+					<li class="next"><a href="" class="paging,next">next
+							&rarr;</a></li>
+				</ul>
+			</nav>
+			<!-- ページ番号を指定して表示するフォーム -->
+			<div id="select-error"></div>
+			<div id="select-page">
+				<form class="form-inline">
+					<div class="form-group">
+						<div class="input-group col-xs-6">
+							<label></label> <input type="text" class="form-control"
+								id="pagejump" />
+							<!-- 総ページ数 -->
+							<div class="input-group-addon"></div>
+						</div>
+						<div class="input-group col-xs-1">
+							<button type="button" id="totalpage" class="btn btn-default">Go</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- script -->
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+		crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+	<script th:src="@{/js/showChildCategoryList.js}"></script>
+	<script th:src="@{/js/showGrandChildCategoryList.js}"></script>
+	<script th:src="@{/js/showItemList.js}"></script>
+</body>
+</html>

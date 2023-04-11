@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- css -->
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous" />
+<link rel="stylesheet" href="/css/mercari.css" />
+<!-- script -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+<script th:src="@{/js/showChildCategoryList.js}"></script>
+<script th:src="@{/js/showGrandChildCategoryList.js}"></script>
+<title>Rakus Items</title>
+</head>
+<body>
+	<!-- navbar -->
+	<nav class="navbar navbar-inverse">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="./list.html">Rakus Items</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<div>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a id="logout" href="./login.html">Logout&nbsp;<i
+							class="fa fa-power-off"></i></a></li>
+				</ul>
+				<p class="navbar-text navbar-right">
+					<span id="loginName">user: userName</span>
+				</p>
+			</div>
+		</div>
+	</nav>
+
+	<!-- details -->
+	<div class="container">
+		<form th:action="@{/showitemlist}" method="get">
+			<button type="submit" class="btn btn-default">
+				<i class="fa fa-reply"></i> back
+			</button>
+		</form>
+		<h2>Add</h2>
+
+
+		<form enctype="multipart/form-data" th:action="@{/additem/submit}"
+			th:object="${addItemForm}" method="post" class="form-horizontal">
+			<div></div>
+
+			<!-- name -->
+			<div class="form-group">
+				<label for="inputName" class="col-sm-2 control-label">name</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="inputName" name="name"
+						th:field="*{name}" /> <span class="text-danger"
+						th:errors="*{name}">error:may not be empty</span>
+				</div>
+			</div>
+
+			<!-- price -->
+			<div class="form-group">
+				<label for="price" class="col-sm-2 control-label">price</label>
+				<div class="col-sm-8">
+					<input type="text" class="form-control" id="price" name="price"
+						th:value="${price}" th:feild="*{price}" /> <span
+						class="text-danger" th:errors="*{price}">error:may not be
+						empty</span>
+				</div>
+			</div>
+
+			<!-- category -->
+			<div class="form-group">
+				<label for="category" class="col-sm-2 control-label">category</label>
+				<div class="col-sm-8">
+					<select class="form-control" id="parentCategory">
+						<option th:value=null>-- parentCategory --</option>
+						<optgroup th:each="Category: ${parentCategoryList}">
+							<option th:text="${Category.categoryName}"
+								th:value="${Category.id}">parentCategory1</option>
+						</optgroup>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label for="category" class="col-sm-2 control-label"></label>
+				<div class="col-sm-8">
+					<select class="form-control" id="childCategory" >
+						<option th:value=null>-- childCategory --</option>
+						<optgroup id="childAllCategory">
+						</optgroup>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="category" class="col-sm-2 control-label"></label>
+				<div class="col-sm-8">
+					<select class="form-control" name="category"
+						id="grandChildCategory" th:field="*{categoryId}">
+						<option th:value=null>-- grandChild --</option>
+						<optgroup id="grandChildAllCategory">
+						</optgroup>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="category" class="col-sm-2 control-label"></label>
+				<div class="col-sm-8">
+					<span class="text-danger" th:errors="*{categoryId}">error:may
+						not be empty</span>
+				</div>
+			</div>
+			<!-- brand -->
+			<div class="form-group">
+				<label for="brand" class="col-sm-2 control-label">brand</label>
+				<div class="col-sm-8">
+					<input type="text" id="brand" class="form-control" name="brand"
+						th:value="${brand}" th:field="*{brand}" /> <span
+						class="text-danger" th:errors="*{brand}">error:may not be
+						empty</span>
+				</div>
+			</div>
+			<!-- condition -->
+			<div class="form-group">
+				<label for="condition" class="col-sm-2 control-label">condition</label>
+				<div class="col-sm-8">
+					<label for="condition1" class="radio-inline"> <input
+						type="radio" name="condition" id="condition1" value="1" th:value=1
+						th:field="*{condition}" /> 1
+					</label> <label for="condition2" class="radio-inline"> <input
+						type="radio" name="condition" id="condition2" th:value=2 value=2
+						th:field="*{condition}" /> 2
+					</label> <label for="condition3" class="radio-inline"> <input
+						type="radio" name="condition" id="condition3" value="3" th:value=3
+						th:field="*{condition}" /> 3
+					</label> <label for="condition4" class="radio-inline"> <input
+						type="radio" name="condition" id="condition4" th:value=4 value=4
+						th:field="*{condition}" /> 4
+					</label> <label for="condition5" class="radio-inline"> <input
+						type="radio" name="condition" id="condition5" th:value=5 value=5
+						th:field="*{condition}" /> 5
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="category" class="col-sm-2 control-label"></label>
+				<div class="col-sm-8">
+					<span class="text-danger" th:errors="*{condition}">error:may
+						not be empty</span>
+				</div>
+			</div>
+			<!-- description -->
+			<div class="form-group">
+				<label for="description" class="col-sm-2 control-label">description</label>
+				<div class="col-sm-8">
+					<textarea name="description" id="description" class="form-control"
+						rows="5"  th:field="*{description}"></textarea>
+					<span class="text-danger" th:errors="*{description}">error:may
+						not be empty</span>
+				</div>
+			</div>
+			<!-- Image -->
+			<div class="form-group">
+				<label for="itemImage" class="col-sm-2 control-label">item_image</label>
+				<div class="col-sm-8">
+					<input type="file" accept="image/jpeg, image/png" name="itemImage"
+						id="itemImage" th:field="*{itemImage}">
+				</div>
+			</div>
+			<!-- store_id -->
+			<div class="form-group">
+				<label for="storeId" class="col-sm-2 control-label">store
+					id:</label>
+				<div class="col-sm-8">
+					<input type="hidden" th:field="*{storeId}"> <label
+						for="storeId" class="col-sm-2 control-label" th:text="${storeId}"
+						th:value="${storeId}">none</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="insertUser" class="col-sm-2 control-label">user
+					name</label>
+				<div class="col-sm-8">
+					<input type="hidden" th:field="*{insertUser}"> <label
+						for="insertUser" class="col-sm-2 control-label"
+						th:text="${insertUser}" th:value="${insertUser}">none</label>
+				</div>
+			</div>
+			<!-- submit button -->
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-default">Submit</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

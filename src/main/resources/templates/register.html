@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!-- css -->
+<link
+	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet"
+	integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous" />
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous" />
+<link rel="stylesheet" href="/css/mercari.css" />
+<!-- script -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
+<script th:src="@{/js/get_address.js}"></script>
+<title>Rakus Items</title>
+</head>
+<body>
+	<!-- navbar -->
+	<nav class="navbar navbar-inverse">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" th:href="@{/showitemlist}">Rakus Items</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<div>
+				<ul class="nav navbar-nav navbar-right">
+					<li sec:authorize="hasRole('ROLE_USER')"><a
+						th:href="@{/login-user/logout}" id="logout">Logout&nbsp;<i
+							class="fa fa-power-off"></i></a></li>
+					<li sec:authorize="!isAuthenticated()"><a
+						th:href="@{/login-user}" id="login">Login&nbsp; <i
+							class="fa fa-power-on"></i></a></li>
+				</ul>
+				<p class="navbar-text navbar-right">
+					<span id="loginName" sec:authorize="hasRole('ROLE_USER')">user:
+						<span sec:authentication="principal.user.name">山田</span>
+					</span> <span id="logoutName" sec:authorize="!isAuthenticated()"> <span>Guest</span></span>
+				</p>
+			</div>
+		</div>
+	</nav>
+
+	<!-- register form -->
+	<div id="login" class="container">
+		<div class="panel panel-default">
+			<div class="panel-heading">Register Account</div>
+			<div class="panel-body">
+				<form action="#" th:action="@{/insert-user/insert}" method="POST"
+					th:object="${insertUserForm}">
+
+					<div class="form-group">
+						<span class="error" th:errors="*{name}">Please
+							enter your name</span>  <label for="name">name</label><input id="name" name="name" type="text"
+							class="form-control" th:field="*{name}" />
+					</div>
+
+					<div class="form-group">
+						<span class="error" th:errors="*{email}">Please
+							enter your Email</span> <label for="email">mail address</label> <input
+							type="email" class="form-control" id="email" th:field="*{email}">
+					</div>
+
+					<div class="form-group">
+						<span class="error" th:errors="*{zipcode}" style="color: red"></span>
+						<label for="zipcode">zipcode</label> <input id="zipcode"
+							class="form-control" name="zipcode" type="text" maxlength="8"
+							th:field="*{zipcode}" /> <br>
+						<button id="get_address_btn" class="btn" type="button">Address
+							search</button>
+					</div>
+					<div class="form-group">
+						<div class="error" th:errors="*{address}" style="color: red"></div>
+						<label for="address">address</label> <input id="address"
+							name="address" type="text" class="form-control"
+							th:field="*{address}" />
+					</div>
+					<div class="form-group">
+						<div class="error" th:errors="*{telephone}" style="color: red">
+							Please enter your telephone number in the format of
+							XXX-XXXX-XXXX"</div>
+						<label for="telephone">telephone num</label> <input id="telephone"
+							name="telephone" type="tel" class="form-control"
+							th:field="*{telephone}" />
+					</div>
+					<div class="form-group">
+						<div class="error" th:errors="*{password}" style="color: red">"Please
+							set your password between 8 and 16 characters.</div>
+						<label for="password">password</label> <input id="password"
+							name="password" type="password" class="form-control"
+							maxlength="16" min="8" th:field="*{password}" />
+					</div>
+					<div class="form-group">
+						<div class="error" th:errors="*{confirmationPassword}"
+							style="color: red">Please enter the
+							confirmation password.</div>
+						<label for="confitmationPassword">confirmantion Password</label> <input
+							id="confirmation_password" name="confirmationPassword"
+							type="password" maxlength="16" class="form-control" min="8"
+							th:feild="confirmationPassword" />
+					</div>
+					<div class="form-group">
+						<label for="shopmanager" class="radio-inline"> <input
+							type="radio" value=1 th:field="*{authority}" id=authority
+							name="shopmanager">Shop Manager
+						</label> <label for="ordermanager" class="radio-inline"> <input
+							type="radio" value=2 th:field="*{authority}" id=authority
+							name="ordermanager">Order Manager
+						</label> <label for="generalaccount" class="radio-inline"> <input
+							type="radio" value=3 th:field="*{authority}" id=authority
+							name="generalaccount">General Account
+						</label>
+					</div>
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+			</div>
+		</div>
+		<div>
+			<a type="button" class="btn btn-default" href="./login.html"><i
+				class="fa fa-reply"></i>&nbsp;Login page</a>
+		</div>
+		</div>
+</body>
+</html>
