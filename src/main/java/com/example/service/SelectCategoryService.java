@@ -17,4 +17,8 @@ public class SelectCategoryService {
 		Category category = categoryRepository.findCategoryById(id);
 		return category;
 	}
+	public Category searchParentCategory(Integer id) {
+		Category category = categoryRepository.searchParentCategory(id);
+		return category;
+	}
 }

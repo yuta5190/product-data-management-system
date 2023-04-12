@@ -44,4 +44,16 @@ public class ShowSelectedItemListService {
 		List<Item> selectedItemList = itemRepository.findAllItem(maxDepth, 1, form.getItemName(), category,form.getBrand(), form.getSort());
 		return selectedItemList;
 	}
+	public List<Item> sortByCategory(Integer selectedCategory) {
+		Integer maxDepth = categoryRepository.findMaxDepth(); 
+		Category category = categoryRepository.findCategoryById(selectedCategory);
+		List<Item> selectedItemList = itemRepository.findAllItem(maxDepth, 1,"", category,"","");
+		return selectedItemList;
+	}
+	public List<Item> sortByBrand(String brand) {
+		Integer maxDepth = categoryRepository.findMaxDepth(); 
+		Category category=new Category();
+		List<Item> selectedItemList = itemRepository.findAllItem(maxDepth, 1,"", category,brand,"");
+		return selectedItemList;
+	}
 }

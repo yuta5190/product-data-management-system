@@ -58,7 +58,7 @@
 
 		<!-- 検索フォーム -->
 		<div id="forms">
-			<form class="form-inline" role="form" th:action="@{/select/run}" th:object="${selectItemForm}" method="post">
+			<form class="form-inline" role="form" th:action="@{/showitemlist/select}" th:object="${selectItemForm}" method="post">
 				<div class="form-group">
 					<input type=text class="form-control" id="name" placeholder="item name" th:field="*{itemName}" />
 				</div>
@@ -66,19 +66,17 @@
 					<i class="fa fa-plus"></i>
 				</div>
 				<div class="form-group">
-				  <select class="form-control" id="parentCategory" th:field="*{parentCategoryId}">
-						<option th:value=0 selected="selected">-- parentCategory --</option>
-						<optgroup th:each="Category: ${parentCategoryList}">
-						<option th:text="${Category.categoryName}" th:value="${Category.id}">parentCategory1</option>
-						</optgroup>
+				  <select class="form-control" id="parentCategory" th:field="*{parentCategoryId}" >
+						<option  th:value=0 selected="selected" >-- parentCategory --</option>
+						<option th:each="Category: ${parentCategoryList}" th:text="${Category.categoryName}" th:value="${Category.id}">parentCategory1</option>
 				  </select> 
-				  <select class="form-control" id="childCategory" th:field="*{childCategoryId}">
-						<option th:value=0 selected="selected">-- childCategory --</option>
-						<option th:text="${childCategory.categoryName}" value="" th:value="${childCategory.id}" id="childCategoryValue" class="blind"></option>
+				  <select class="form-control" name="category" id="childCategory" th:field="*{childCategoryId}">
+						<option  value="0" selected="selected">-- childCategory --</option>
+						<option   th:if="${childCategory.id != null}" th:text="${childCategory.categoryName}" value="" th:value="${childCategory.id}" id="childCategoryValue" ></option>
 				 </select> 
 				 <select class="form-control" name="category" id="grandChildCategory" th:field="*{grandChildCategoryId}">
-						<option th:value=0 selected="selected">-- grandChild --</option>
-						<option th:text="${grandChildCategory.categoryName}" value="" th:value="${grandChildCategory.id}" id="grandChildCategoryValue"></option>
+						<option  value="0" selected="selected">-- grandChildCategory --</option>
+						<option th:if="${grandChildCategory.id != null}" th:text="${grandChildCategory.categoryName}" value="" th:value="${grandChildCategory.id}" id="grandChildCategoryValue"></option>
 				</select>
 				</div>
 				<div class="form-group">
@@ -140,11 +138,11 @@
 							<td class="item-category">
 							  <span th:each="category, iterStat:${item.categoryDetail}"> 
 							  <span th:if="${!iterStat.first}">/</span>
-							  <a href="" th:text="${category.categoryName}"> </a>
+							  <a th:href="@{/showitemlist/sortbycategory(categoryId=${category.id},hierarchy=${iterStat.count})}"th:text="${category.categoryName}" > </a>
 							</span>
 							</td>
 							<td class="item-brand">
-							  <a href="" th:text="${item.brand}"></a>
+							  <a th:href="@{/showitemlist/sortbybrand?brand=}+${item.brand}" th:text="${item.brand}"></a>
 							</td>
 							<td class="item-condition" th:text="${item.condition}"></td>
 						</tr>

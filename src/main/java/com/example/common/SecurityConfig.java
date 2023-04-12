@@ -34,7 +34,7 @@ public class SecurityConfig {
 
 		// 認可に関する設定
 		http.authorizeHttpRequests()
-		 .requestMatchers("/","/login-user/login", "/login-user","/showitemlist", "/insert-user", "/insert-user/insert", "/updateitem", "/registerUser", "/registerUser/register","/additem/viewchildcategory", "/additem/viewgrandchildcategory","/select/**","/updateitem","/updateitem/**")
+		 .requestMatchers("/","/login-user/login", "/login-user","/showitemlist", "/insert-user", "/insert-user/insert", "/updateitem", "/registerUser", "/registerUser/register","/additem/viewchildcategory", "/additem/viewgrandchildcategory","/showitemlist/**","/updateitem","/updateitem/**")
 		 
 				.permitAll()
 				.anyRequest().authenticated();

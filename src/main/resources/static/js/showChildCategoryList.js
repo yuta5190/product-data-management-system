@@ -1,4 +1,5 @@
 "use strict"
+
 // 読み込み時$("#parentCategory")に紐づくカテゴリーを取得する際に、コントローラーからchildCategory"を退避し処理後に追加するコード
 $(document).ready(function() {
 	var childvalue = $("#childCategory").val();
@@ -7,7 +8,6 @@ $(document).ready(function() {
 	//フォームの大きさが更新と共に変更されるため設定
 	var maxWidth = 200;
 	selectBox.width(maxWidth);
-
 	//初期の文字表示だとvalue=0となり、chld,grandchildがnullになってしまうため適応外にする
 	if (childvalue !== '0') {
 		setTimeout(function() {
@@ -24,9 +24,9 @@ $(document).ready(function() {
 					
 					//データに基づきhtmlを作成
 					var optgroupHtml = '';
-					optgroupHtml += '<option th:value=null>-- childCategory --</option>'
+					optgroupHtml += '<option th:value=0>-- childCategory --</option>'
 					$.each(CategoryList, function(_, childCategory) {
-						optgroupHtml += '<option value="' + childCategory.id + '" name=>' + childCategory.categoryName + '</option>';
+						optgroupHtml += '<option value="' + childCategory.id + '" >' + childCategory.categoryName + '</option>';
 					});
 					$('#childCategory').html(optgroupHtml);
 					
@@ -43,7 +43,6 @@ $(document).ready(function() {
    //前のカテゴリーが変更時に機能するメソッド
 	$(function() {
 		$("#parentCategory").on('click change', function() {
-			
 			// 選択されたオプションの値を取得
 			let selectedOption = $('#parentCategory').val();
 			
@@ -55,11 +54,10 @@ $(document).ready(function() {
 				data: { id: selectedOption },
 				success: function(data) {
 					//option変更後に紐づかない値が次のselectに残ってしまうため一度消去する。
-　　　　　　　　　　　		$("#grandChildCategoryValue").remove();
-					
+　　　　　　　　　　　		$("#grandChildCategoryValue").remove();					
 					//データに基づきhtmlを作成
 					var CategoryList = data.childCategoryList;
-					var optgroupHtml = '<option th:value=null>-- childCategory --</option>';
+					var optgroupHtml = '<option th:value=0 value=0>-- childCategory --</option>';
 					$.each(CategoryList, function(_, childCategory) {
 						optgroupHtml += '<option value="' + childCategory.id + '">' + childCategory.categoryName + '</option>';
 					});

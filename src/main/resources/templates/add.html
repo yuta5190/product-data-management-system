@@ -96,10 +96,8 @@
 				<div class="col-sm-8">
 					<select class="form-control" id="parentCategory">
 						<option th:value=null>-- parentCategory --</option>
-						<optgroup th:each="Category: ${parentCategoryList}">
-							<option th:text="${Category.categoryName}"
+							<option  th:each="Category: ${parentCategoryList}" th:text="${Category.categoryName}"
 								th:value="${Category.id}">parentCategory1</option>
-						</optgroup>
 					</select>
 				</div>
 			</div>

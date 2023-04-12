@@ -93,7 +93,20 @@ public class CategoryRepository {
 		Category category = categoryList.get(0);
 		return category;
 	}
-
+	
+	/**
+	 * 親カテゴリー検索
+	 * 
+	 * @param id カテゴリーid
+	 * @return idに紐づくカテゴリー情報（Categoryオブジェクト）
+	 */
+	public Category searchParentCategory(Integer categoryId) {
+		String sql = "SELECT c.id AS id,c.category_name AS category_name FROM categorys AS p LEFT JOIN categorytree AS ptree ON p.id = ptree.child_id LEFT join categorys AS c ON ptree.parent_id=c.id  WHERE p.id=:categoryId  ORDER BY id";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("categoryId", categoryId);
+		List<Category> categoryList = template.query(sql, param, PARENTCATEGORY_ROW_MAPPER);
+		Category category = categoryList.get(0);
+		return category;
+	}
 
 
 	/**

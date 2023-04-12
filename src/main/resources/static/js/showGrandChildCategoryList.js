@@ -24,7 +24,7 @@ $(document).ready(function() {
 
 					//データに基づきhtmlを作成
 					var optgroupHtml = '';
-					optgroupHtml += '<option th:value=null>-- grandChildCategory --</option>';
+					optgroupHtml += '<option th:value=0>-- grandChildCategory --</option>';
 					$.each(grandChildCategoryList, function(_, grandChildCategory) {
 						optgroupHtml += '<option value="' + grandChildCategory.id + '">' + grandChildCategory.categoryName + '</option>';
 					});
@@ -55,7 +55,7 @@ $(document).ready(function() {
 
 					//データに基づきhtmlを作成
 					var grandChildCategoryList = granddata.grandChildCategoryList;
-					var optgroupHtml = '<option th:value=null>-- grandChildCategory --</option>';
+					var optgroupHtml = '<option th:value=0 value=0>-- grandChildCategory --</option>';
 					$.each(grandChildCategoryList, function(_, grandChildCategory) {
 						optgroupHtml += '<option value="' + grandChildCategory.id + '">' + grandChildCategory.categoryName + '</option>';
 					});
@@ -65,5 +65,4 @@ $(document).ready(function() {
 			});
 		});
 	});
-
 })

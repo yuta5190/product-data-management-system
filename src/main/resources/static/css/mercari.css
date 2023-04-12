@@ -3,6 +3,13 @@
 span#loginName {
 	margin-right: 1em;
 }
+ select{
+      width:200px;
+    }
+select {
+  margin: 0;
+  padding: 0;
+}
 
 #imageForm {
 	float: left;

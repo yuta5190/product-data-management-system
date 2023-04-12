@@ -171,6 +171,7 @@ public class ItemRepository {
 	 * @return 総商品数
 	 */
 	public Integer countTotalItem(Integer maxDepth, String itemName, Category category, String brand) {
+		
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT COUNT(item.id) AS count ");
 		sql.append(" FROM items AS item LEFT JOIN categorys AS category0 ON item.category=category0.id");
