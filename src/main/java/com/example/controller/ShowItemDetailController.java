@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.domain.Item;
-import com.example.service.ShowItemDetailService;
+import com.example.service.SortItemService;
 
 /**
  * 商品詳細表示のコントローラー
@@ -18,7 +18,7 @@ import com.example.service.ShowItemDetailService;
 @RequestMapping("/showitemdetail")
 public class ShowItemDetailController {
 	@Autowired
-	private ShowItemDetailService showItemDetailService;
+	private SortItemService sortItemService;
 
 /**
  * "list"でクリックした商品を詳細表示するコントローラー
@@ -28,7 +28,7 @@ public class ShowItemDetailController {
  */
 @GetMapping("")
 public String index(Model model,Integer id) {
-	Item item =showItemDetailService.showItemDetail(id);
+	Item item =sortItemService.showItemDetail(id);
 	if(item.getItemImage()==null||item.getItemImage().equals("")) {item.setItemImage("noimage-760x460.png");}
 	model.addAttribute("Item",item);
 	return "detail";

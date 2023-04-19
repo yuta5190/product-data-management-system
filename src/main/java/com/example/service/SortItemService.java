@@ -15,7 +15,7 @@ import com.example.repository.ItemRepository;
  */
 @Service
 @Transactional
-public class ShowItemDetailService {
+public class SortItemService {
 	@Autowired
 	private ItemRepository itemRepository;
 

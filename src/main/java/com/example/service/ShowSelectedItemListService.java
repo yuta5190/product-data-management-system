@@ -35,21 +35,23 @@ public class ShowSelectedItemListService {
 		Integer maxDepth = categoryRepository.findMaxDepth(); 
 		Category category = new Category();
 		if (form.getGrandChildCategoryId() != 0) {
-			category = categoryRepository.findCategoryById(form.getGrandChildCategoryId());
+			category = categoryRepository.load(form.getGrandChildCategoryId());
 		} else if (form.getChildCategoryId() != 0) {
-			category = categoryRepository.findCategoryById(form.getChildCategoryId());
+			category = categoryRepository.load(form.getChildCategoryId());
 		} else if (form.getParentCategoryId() != 0) {
-			category = categoryRepository.findCategoryById(form.getParentCategoryId());
-		}
+			category = categoryRepository.load(form.getParentCategoryId());
+		}else {category.setId(0);}
 		List<Item> selectedItemList = itemRepository.findAllItem(maxDepth, 1, form.getItemName(), category,form.getBrand(), form.getSort());
 		return selectedItemList;
 	}
+	
 	public List<Item> sortByCategory(Integer selectedCategory) {
 		Integer maxDepth = categoryRepository.findMaxDepth(); 
-		Category category = categoryRepository.findCategoryById(selectedCategory);
+		Category category = categoryRepository.load(selectedCategory);
 		List<Item> selectedItemList = itemRepository.findAllItem(maxDepth, 1,"", category,"","");
 		return selectedItemList;
 	}
+	
 	public List<Item> sortByBrand(String brand) {
 		Integer maxDepth = categoryRepository.findMaxDepth(); 
 		Category category=new Category();

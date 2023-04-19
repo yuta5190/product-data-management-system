@@ -142,7 +142,7 @@ public class ItemRepository {
 		
 		/** WHERE文 終了 */
 		/** ORDER BY 開始 */
-		sql.append(" ORDER BY " + orderBy + " LIMIT 1000 OFFSET :page ;");
+		sql.append(" ORDER BY " + orderBy + " LIMIT 100 OFFSET :page ;");
 		/** ORDER BY 終了 */
 
 		/** 入れる要素 開始 */
@@ -158,7 +158,7 @@ public class ItemRepository {
 		if (!(brand.equals(""))) {
 			paramMap.put("brand", "%" + brand + "%");
 		}
-		paramMap.put("page", 1 + (page - 1) * 1000);
+		paramMap.put("page", 1 + (page - 1) * 100);
 
 		/** 入れる要素 終了 */
 		List<Item> itemList = template.query(sql.toString(), paramMap, ALLITEM_RESULT_SET_EXTRACTOR);
@@ -191,7 +191,7 @@ public class ItemRepository {
 		sql.append(")");
 		}
 		sql.append(")");
-		if(category.getHierarchy()!=null) {
+		if(category.getId()!=0) {
 			for(int i =0;i<=maxCategoryDepth;i++) {
 				if(i==0) {sql.append(" AND (");}else {sql.append(" OR");}
 			sql.append(" category"+i+".id = :categoryId");}

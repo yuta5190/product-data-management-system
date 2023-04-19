@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.repository.CategoryRepository">
+ 
+ <resultMap id="Category_Result_Map" type="com.example.domain.Category">
+  <result  column="id" property="id" jdbcType="INTEGER"/>
+   <result column="categoryName" property="category_name" jdbcType="VARCHAR"/>
+ </resultMap>
+ 
+  <resultMap id="CategoryTree_Result_Map" type="com.example.domain.CategoryTree">
+  <result column="childId" property="child_id" jdbcType="INTEGER"/>
+ </resultMap>
+ 
+ <!-- 大カテゴリー全件検索 -->
+ <select id="findAllParentCategory" resultMap="Category_Result_Map">
+        SELECT id,category_name FROM categorys WHERE hierarchy = 0 ORDER BY id;
+ </select>
+ 
+ <!-- カテゴリーid検索 -->
+ <select id="load" parameterType="Integer" resultType="com.example.domain.Category">
+  SELECT id,category_name AS categoryName ,hierarchy FROM categorys WHERE id=#{categoryId}  ORDER BY id;
+ </select>
+ 
+ <!-- 親カテゴリー検索 -->
+ <select id="findParentCategoryByChildId" resultType="com.example.domain.Category">
+ SELECT categorys.id AS id,categorys.category_name AS categorName FROM  categorytree LEFT join categorys ON categorytree.parent_id=categorys.id  WHERE categorytree.child_id =#{categoryId} AND categorytree.depth=1  ORDER BY id
+ </select>
+ 
+ <!-- 子カテゴリー検索 -->
+ <select id="findChildCategoryList" resultMap="CategoryTree_Result_Map" parameterType="map"> 
+ SELECT child_id FROM categorytree WHERE parent_id = #{parentId} AND depth = #{depth} ORDER BY child_id ;
+ </select>
+  
+ <!--カテゴリーの最大階層検索  -->
+ <select id="findMaxDepth" resultType="java.lang.Integer">
+ SELECT MAX(hierarchy) AS max FROM categorys;
+ </select>
+ 
+</mapper>

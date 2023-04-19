@@ -12,9 +12,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 /**
  * spring securityに関するクラス.
  * 
- * @author yoshidayuuta
+ * @author yoshida_yuuta
  *
  */
+
 @Configuration
 public class SecurityConfig {
 
@@ -22,31 +23,30 @@ public class SecurityConfig {
 	 * このメソッドをオーバーライドすることで、 特定のリクエストに対して「セキュリティ設定」を 無視する設定など全体にかかわる設定ができる.
 	 * 具体的には静的リソースに対してセキュリティの設定を無効にする。
 	 * 
-	 * @see org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter#configure(org.springframework.security.config.annotation.web.builders.WebSecurity)
 	 */
 	@Bean
 	WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("/css/**", "/img/**", "/js/**","/api/**");
-	} 
+		return (web) -> web.ignoring().requestMatchers("/css/**", "/img/**", "/js/**", "/api/**",
+				"/com/example/repository/**");
+	}
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		// 認可に関する設定
 		http.authorizeHttpRequests()
-		 .requestMatchers("/","/login-user/login", "/login-user","/showitemlist", "/insert-user", "/insert-user/insert", "/updateitem", "/registerUser", "/registerUser/register","/additem/viewchildcategory", "/additem/viewgrandchildcategory","/showitemlist/**","/updateitem","/updateitem/**")
-		 
-				.permitAll()
-				.anyRequest().authenticated();
-		
+				.requestMatchers("/", "/login-user","/login-user/**", "/insert-user", "/insert-user/insert",
+						"/registerUser", "/registerUser/register", "/showitemlist", "/showitemlist/**")
+				.permitAll().anyRequest().authenticated();
 
 		// ログインに関する設定
-		http.formLogin().loginPage("/login-user").loginProcessingUrl("/login-user/login").failureUrl("/login-user?error=true")
-				.defaultSuccessUrl("/showitemlist", true).usernameParameter("email").passwordParameter("password");
+		http.formLogin().loginPage("/login-user").loginProcessingUrl("/login-user/login")
+				.failureUrl("/login-user?error=true").defaultSuccessUrl("/showitemlist", true)
+				.usernameParameter("email").passwordParameter("password");
 
 		// ログアウトに関する設定
-		http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/login-user/logout")).logoutSuccessUrl("/login-user")
-				.deleteCookies("JSESSIONID").invalidateHttpSession(true);
+		http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/login-user/logout"))
+				.logoutSuccessUrl("/login-user").deleteCookies("JSESSIONID").invalidateHttpSession(true);
 
 		return http.build();
 
@@ -59,9 +59,7 @@ public class SecurityConfig {
 	 */
 	@Bean
 	PasswordEncoder passwordEncoder() {
-
 		return new BCryptPasswordEncoder();
-
 	}
 
 }

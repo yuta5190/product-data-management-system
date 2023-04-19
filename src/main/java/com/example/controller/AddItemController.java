@@ -21,8 +21,8 @@ import com.example.domain.Category;
 import com.example.domain.LoginUser;
 import com.example.domain.User;
 import com.example.form.AddItemForm;
-import com.example.service.AddItemService;
-import com.example.service.ShowCategoryListService;
+import com.example.service.ResisterItemService;
+import com.example.service.SelectCategoryService;
 
 /**
  * 商品追加用コントローラー
@@ -35,9 +35,9 @@ import com.example.service.ShowCategoryListService;
 public class AddItemController {
 
 	@Autowired
-	private AddItemService addItemService;
+	private ResisterItemService resisterItemService;
 	@Autowired
-	private ShowCategoryListService showCategoryListService;
+	private SelectCategoryService selectCategoryService;
 
 	/**
 	 * 商品追加画面の表示、バリデーション
@@ -48,7 +48,7 @@ public class AddItemController {
 	 */
 	@GetMapping("/view")
 	public String view(@ModelAttribute AddItemForm form, Model model) {
-		List<Category> parentCategoryList = showCategoryListService.viewParentCategory();
+		List<Category> parentCategoryList = selectCategoryService.viewParentCategory();
 		model.addAttribute("parentCategoryList", parentCategoryList);
 		return "add";
 	}
@@ -70,7 +70,7 @@ public class AddItemController {
 			return view(form, model);
 		}
 		form.setInsertUser(user.getId());
-		addItemService.insertItem(form);
+		resisterItemService.insertItem(form);
 		return "redirect:/showitemlist";
 	}
 
@@ -83,8 +83,7 @@ public class AddItemController {
 	@GetMapping("/viewchildcategory")
 	@ResponseBody
 	public Map<String, Object> showChildCategory(@RequestParam int id) {
-		System.out.println(id);
-		List<Category> childCategoryList = showCategoryListService.viewCategory(id, 1);
+		List<Category> childCategoryList = selectCategoryService.viewCategory(id, 1);
 		Map<String, Object> data = new HashMap<>();
 		data.put("childCategoryList", childCategoryList);
 		return data;
@@ -99,8 +98,7 @@ public class AddItemController {
 	@GetMapping("/viewgrandchildcategory")
 	@ResponseBody
 	public Map<String, Object> showGrandChildCategory(int id) {
-		System.out.println(id);
-		List<Category> grandChildCategoryList = showCategoryListService.viewCategory(id, 1);
+		List<Category> grandChildCategoryList = selectCategoryService.viewCategory(id, 1);
 		Map<String, Object> granddata = new HashMap<>();
 		granddata.put("grandChildCategoryList", grandChildCategoryList);
 		return granddata;

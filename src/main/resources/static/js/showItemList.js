@@ -159,7 +159,6 @@ $(function() {
 				}
 		if (isNaN($('#pagejump').val())) {
 			$('#select-error').text('数字を入力してください').css('color', 'red');
-
 		} else {
 			$('#select-error').text('');
 			page = $('#pagejump').val();
