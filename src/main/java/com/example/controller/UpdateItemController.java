@@ -71,6 +71,12 @@ public class UpdateItemController {
 		return "edit";
 	}
 
+	/**
+	 * 商品情報更新
+	 * @param form　更新フォーム
+	 * @return　商品詳細画面
+	 * @throws IOException
+	 */
 	@PostMapping("/update")
 	public String update(@ModelAttribute UpdateItemForm form) throws IOException {
 		editItemService.updateItem(form);

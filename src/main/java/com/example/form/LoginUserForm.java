@@ -1,5 +1,10 @@
 package com.example.form;
 
+/**
+ * ログイン情報
+ * @author yoshida_yuuta
+ *
+ */
 public class LoginUserForm {
 	/** パスワード */
 	private String password;

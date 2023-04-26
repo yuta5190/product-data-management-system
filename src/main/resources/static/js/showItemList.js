@@ -22,6 +22,7 @@ page = 1
 			nextLink.addClass('hidden');
 		} else { nextLink.removeClass('hidden'); }
 	$('#pagejump').val(page);
+	
 /** 初回アクセス時に商品表示*/
 $(document).ready(function() {
 	parentCategory = $("#parentCategory").val();
@@ -54,12 +55,14 @@ $(function() {
 				}
 		page = page - 1;
 		$('#pagejump').val(page);
+		
 		if (page <= 1) {
 			prevLink.addClass('hidden');
 		} else { prevLink.removeClass('hidden'); }
 		if (page >= totalPage) {
 			nextLink.addClass('hidden');
 		} else { nextLink.removeClass('hidden'); }
+		
 		e.preventDefault();
 		$.ajax({
 			url: 'http://localhost:8080/showitemlist/paging',

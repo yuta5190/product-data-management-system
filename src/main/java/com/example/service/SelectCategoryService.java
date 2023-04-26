@@ -11,6 +11,11 @@ import com.example.domain.Category;
 import com.example.domain.CategoryTree;
 import com.example.repository.CategoryRepository;
 
+/**
+ * カテゴリー検索サービス
+ * @author yoshida_yuuta
+ *
+ */
 @Service
 @Transactional
 public class SelectCategoryService {

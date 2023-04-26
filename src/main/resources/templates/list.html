@@ -131,7 +131,7 @@
 						</tr>
 						<tr th:each="item:${itemList}" id="itemList">
 							<td class="item-name">
-							  <a th:href="@{/showitemdetail?id=}+${item.id}" th:text="${item.name}"></a>
+							<a th:href="@{/showitemdetail?id=}+${item.id}" th:text="${item.name}"></a>
 							</td>
 							<td class="item-price" th:text="${item.StringPrice}">
 							</td>

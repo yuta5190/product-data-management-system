@@ -22,7 +22,6 @@ import com.example.service.SelectCategoryService;
 import com.example.service.ShowItemListService;
 import com.example.service.ShowSelectedItemListService;
 
-import ch.qos.logback.core.recovery.ResilientSyslogOutputStream;
 
 /**
  * 商品一覧表示画面のコントローラー
@@ -102,6 +101,7 @@ public class ShowItemListController {
 		if (orderBy == null) {
 			orderBy = "";
 		}
+		
 		List<Item> itemList = showItemlistService.showItemList(page, search, parentCategory, childCategory,
 				grandChildCategory, brand, totalPage, orderBy);
 		Map<String, Object> data = new HashMap<>();
@@ -120,7 +120,9 @@ public class ShowItemListController {
 	public String select(SelectItemForm form, Model model) {
 		List<Item> itemList = new ArrayList<>();
 		itemList = showSelectedItemListService.showSelectedItemList(form);
+		
 		List<Category> parentCategoryList = selectCategoryService.viewParentCategory();
+		
 		Category childCategory = new Category();
 		Category grandChildCategory = new Category();
 		if (form.getChildCategoryId() != 0) {
@@ -140,18 +142,33 @@ public class ShowItemListController {
 		return "list";
 	}
 
+	/**
+	 * カテゴリー検索
+	 * @param model　モデル
+	 * @param categoryId　カテゴリーId
+	 * @param hierarchy　カテゴリーの深さ情報
+	 * @return　商品一覧画面表示
+	 */
 	@GetMapping("/sortbycategory")
 	public String sortByCategory(Model model, Integer categoryId, Integer hierarchy) {
+		
+		
 		SelectItemForm form = new SelectItemForm();
 		List<Item> itemList = new ArrayList<>();
 		Category firstcategory = new Category();
+		
 		firstcategory.setId(categoryId);
+		
+		/**アイテム情報取得*/
 		itemList = showSelectedItemListService.sortByCategory(categoryId);
+		
+		/**検索フォームのカテゴリータブ情報*/
 		List<Category> parentCategoryList = selectCategoryService.viewParentCategory();
+		
+		/**検索情報を引き継ぐ*/
 		List<Category> list = new ArrayList<>();
 		list.add(firstcategory);
 		Integer newcategoryId = categoryId;
-
 		for (int i = 1; i < hierarchy; i++) {
 			Category category = selectCategoryService.searchParentCategory(newcategoryId);
 			list.add(category);
@@ -173,6 +190,7 @@ public class ShowItemListController {
 			grandChildCategory = selectCategoryService.selectCategoryById(list.get(2).getId());
 			form.setGrandChildCategoryId(list.get(2).getId());
 		}
+		
 		model.addAttribute("grandChildCategory", grandChildCategory);
 		model.addAttribute("itemList", itemList);
 		model.addAttribute("selectItemForm", form);
@@ -180,6 +198,12 @@ public class ShowItemListController {
 		return "list";
 	}
 
+	/**
+	 * ブランド情報検索
+	 * @param model　モデル
+	 * @param brand　ブランドあいまい検索ワード
+	 * @return　商品情報表示画面
+	 */
 	@GetMapping("/sortbybrand")
 	public String sortByBrand(Model model, String brand) {
 		SelectItemForm form = new SelectItemForm();
