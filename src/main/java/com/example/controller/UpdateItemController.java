@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.domain.Category;
 import com.example.domain.Item;
 import com.example.form.UpdateItemForm;
-import com.example.service.ShowCategoryListService;
-import com.example.service.ShowItemDetailService;
-import com.example.service.UpdateItemService;
+import com.example.service.SelectCategoryService;
+import com.example.service.SortItemService;
+import com.example.service.EditItemService;
 
 /**
  * 商品情報更新のコントローラー
@@ -27,11 +27,11 @@ import com.example.service.UpdateItemService;
 @RequestMapping("/updateitem")
 public class UpdateItemController {
 	@Autowired
-	public ShowItemDetailService showItemDetail;
+	public SortItemService showItemDetail;
 	@Autowired
-	public ShowCategoryListService showCategoryList;
+	public EditItemService editItemService;
 	@Autowired
-	public UpdateItemService updateItemService;
+	public SelectCategoryService selectCategory;
 
 	/**
 	 * 商品情報更新画面表示
@@ -56,7 +56,7 @@ public class UpdateItemController {
 		if (item.getItemImage() == null || item.getItemImage().equals("")) {
 			form.setItemImageName("noimage-760x460.png");
 		}
-		List<Category> parentCategoryList = showCategoryList.viewParentCategory();
+		List<Category> parentCategoryList = selectCategory.viewParentCategory();
 		model.addAttribute("parentCategoryList", parentCategoryList);
 		Category parentCategory =item.getCategoryDetail().get(0);
 		Category childCategory =item.getCategoryDetail().get(1);
@@ -73,7 +73,7 @@ public class UpdateItemController {
 
 	@PostMapping("/update")
 	public String update(@ModelAttribute UpdateItemForm form) throws IOException {
-		updateItemService.updateItem(form);
+		editItemService.updateItem(form);
 		return "redirect:/showitemdetail?id=" + form.getId();
 	}
 

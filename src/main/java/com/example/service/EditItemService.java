@@ -20,11 +20,11 @@ import com.example.repository.ItemRepository;
 
 @Service
 @Transactional
-public class UpdateItemService {
+public class EditItemService {
 	@Autowired
 	private ItemRepository itemRepository;
 	@Autowired
-	private AddItemService addItemService;
+	private ResisterItemService resisterItemService;
 	/**
 	 * 商品情報更新
 	 * @param item　商品更新情報
@@ -42,7 +42,7 @@ public class UpdateItemService {
 		//item.setShipping(form.getShipping());
 		item.setShipping(0);
 		item.setDescription(form.getDescription());
-		String fileName = addItemService.saveImage(form.getItemImage());
+		String fileName = resisterItemService.saveImage(form.getItemImage());
 		item.setItemImage(fileName);
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 		item.setInsertDate(timestamp);

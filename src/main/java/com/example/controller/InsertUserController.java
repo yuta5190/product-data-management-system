@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.domain.User;
 import com.example.form.InsertUserForm;
-import com.example.service.InsertUserService;
+import com.example.service.ResisterUserService;
 
 @Controller
 @RequestMapping("/insert-user")
 public class InsertUserController {
 	@Autowired
-	private InsertUserService insertUserService;
+	private ResisterUserService resisterUserService;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
@@ -40,9 +40,8 @@ public class InsertUserController {
 		}
 
 		/** メールアドレスの重複チェックをします. */
-		User userMailAddress = insertUserService.findByMailAddress(form.getEmail());
+		User userMailAddress = resisterUserService.findByMailAddress(form.getEmail());
 		if (!(userMailAddress == null)) {
-			System.out.println("被りあり");
 			FieldError fieldError = new FieldError(result.getObjectName(), "email", "That email address is already in use.");
 			result.addError(fieldError);
 		}
@@ -55,7 +54,7 @@ public class InsertUserController {
 		User user = new User();
 		BeanUtils.copyProperties(form, user);
 		user.setPassword(passwordEncoder.encode(form.getPassword()));
-		insertUserService.insertUser(user);
+		resisterUserService.insertUser(user);
 		return "redirect:/login-user";
 	}
 }

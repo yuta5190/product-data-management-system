@@ -9,21 +9,23 @@ import com.example.repository.UserRepository;
 
 /**
  * ユーザー登録のサービス
+ * 
  * @author yoshida_yuuta
  *
  */
 @Service
 @Transactional
-public class InsertUserService {
+public class ResisterUserService {
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	public void insertUser(User user) {
-		userRepository.InsertUser(user);
-		
+		userRepository.inserUser(user);
+
 	}
+
 	public User findByMailAddress(String email) {
-	User user = userRepository.findByMailAddress(email);
-	return user;
-}
+		User user = userRepository.findByEmail(email);
+		return user;
+	}
 }

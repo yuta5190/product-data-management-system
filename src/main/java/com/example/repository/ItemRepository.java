@@ -51,7 +51,7 @@ public class ItemRepository {
 		item.setDescription(rs.getString("description"));
 		item.setItemImage(rs.getString("item_image"));
 		item.setInsertDate(rs.getTimestamp("insert_date"));
-		item.setInsertUser(rs.getString("insert_user"));
+		item.setInsertUser(rs.getInt("insert_user"));
 		for (int j = rs.getInt("hierarchy"); j >=0 ; j--) {
 			Category category = new Category();
 			category.setCategoryName(rs.getString("category_name_" + j));
@@ -142,7 +142,7 @@ public class ItemRepository {
 		
 		/** WHERE文 終了 */
 		/** ORDER BY 開始 */
-		sql.append(" ORDER BY " + orderBy + " LIMIT 1000 OFFSET :page ;");
+		sql.append(" ORDER BY " + orderBy + " LIMIT 100 OFFSET :page ;");
 		/** ORDER BY 終了 */
 
 		/** 入れる要素 開始 */
@@ -158,7 +158,7 @@ public class ItemRepository {
 		if (!(brand.equals(""))) {
 			paramMap.put("brand", "%" + brand + "%");
 		}
-		paramMap.put("page", 1 + (page - 1) * 1000);
+		paramMap.put("page", 1 + (page - 1) * 100);
 
 		/** 入れる要素 終了 */
 		List<Item> itemList = template.query(sql.toString(), paramMap, ALLITEM_RESULT_SET_EXTRACTOR);
@@ -171,6 +171,7 @@ public class ItemRepository {
 	 * @return 総商品数
 	 */
 	public Integer countTotalItem(Integer maxDepth, String itemName, Category category, String brand) {
+		
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT COUNT(item.id) AS count ");
 		sql.append(" FROM items AS item LEFT JOIN categorys AS category0 ON item.category=category0.id");
@@ -190,7 +191,7 @@ public class ItemRepository {
 		sql.append(")");
 		}
 		sql.append(")");
-		if(category.getHierarchy()!=null) {
+		if(category.getId()!=0) {
 			for(int i =0;i<=maxCategoryDepth;i++) {
 				if(i==0) {sql.append(" AND (");}else {sql.append(" OR");}
 			sql.append(" category"+i+".id = :categoryId");}

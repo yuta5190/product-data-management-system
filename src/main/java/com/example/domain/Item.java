@@ -37,7 +37,7 @@ public class Item {
 	/** 更新日 */
 	private Timestamp insertDate;
 	/** 更新者 */
-	private String insertUser;
+	private Integer insertUser;
 	/** カテゴリー情報 */
 	private List<Category> categoryDetail;
 
@@ -46,7 +46,7 @@ public class Item {
 
 	public Item(Integer id, Integer storeId, String name, Integer condition, Integer category, Integer hierarchy,
 			String brand, double price, String stringPrice, Integer shipping, String description, String itemImage,
-			Timestamp insertDate, String insertUser, List<Category> categoryDetail) {
+			Timestamp insertDate, Integer insertUser, List<Category> categoryDetail) {
 		super();
 		this.id = id;
 		this.storeId = storeId;
@@ -169,11 +169,11 @@ public class Item {
 		this.insertDate = insertDate;
 	}
 
-	public String getInsertUser() {
+	public Integer getInsertUser() {
 		return insertUser;
 	}
 
-	public void setInsertUser(String insertUser) {
+	public void setInsertUser(Integer insertUser) {
 		this.insertUser = insertUser;
 	}
 

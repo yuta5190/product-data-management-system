@@ -14,8 +14,8 @@ public class LoginController {
 	@GetMapping("")
 	public String login(Model model, @RequestParam(required = false) String error) {
 		if (error != null) {
-			model.addAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
+			model.addAttribute("errorMessage", "Invalid email address or password.");
 		}
 		return "login";
-	}
-}
+
+	}}

@@ -6,13 +6,14 @@ var prevLink = $('.previous');
 var nextLink = $('.next');
 var selectBox = $("select.form-control");
 var maxWidth = 200;
-var parentCategory = null
-var childCategory = null
-var grandChildCategory = null
+var parentCategory = 0
+var childCategory = 0
+var grandChildCategory = 0
 var search = ""
 var brand = ""
 var orderBy = ""
 var itemId;
+
 page = 1
 	if (page === 1) {
 		prevLink.addClass('hidden');
@@ -23,7 +24,6 @@ page = 1
 	$('#pagejump').val(page);
 /** 初回アクセス時に商品表示*/
 $(document).ready(function() {
-	
 	parentCategory = $("#parentCategory").val();
 	childCategory = $("#childCategory").val();
 	grandChildCategory = $("#grandChildCategory").val();
@@ -159,7 +159,6 @@ $(function() {
 				}
 		if (isNaN($('#pagejump').val())) {
 			$('#select-error').text('数字を入力してください').css('color', 'red');
-
 		} else {
 			$('#select-error').text('');
 			page = $('#pagejump').val();

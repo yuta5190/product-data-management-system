@@ -1,6 +1,7 @@
 package com.example.domain;
 
 public class User {
+	private Integer id;
 	private String name;
 	private String email;
 	private String password;
@@ -14,9 +15,10 @@ public class User {
 	public User() {
 	}
 
-	public User(String name, String email, String password, Integer storeId, Integer authority, String zipcode,
-			String address, String telephone, boolean enabled) {
+	public User(Integer id, String name, String email, String password, Integer storeId, Integer authority,
+			String zipcode, String address, String telephone, boolean enabled) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.password = password;
@@ -28,11 +30,12 @@ public class User {
 		this.enabled = enabled;
 	}
 
-	@Override
-	public String toString() {
-		return "User [name=" + name + ", email=" + email + ", password=" + password + ", storeId=" + storeId
-				+ ", authority=" + authority + ", zipcode=" + zipcode + ", address=" + address + ", telephone="
-				+ telephone + ", enabled=" + enabled + "]";
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -103,7 +106,15 @@ public class User {
 		return enabled;
 	}
 
-	public void setEnablate(boolean enabled) {
+	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", storeId="
+				+ storeId + ", authority=" + authority + ", zipcode=" + zipcode + ", address=" + address
+				+ ", telephone=" + telephone + ", enabled=" + enabled + "]";
+	}
+
 }

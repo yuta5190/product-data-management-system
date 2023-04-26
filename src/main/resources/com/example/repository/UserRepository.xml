@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.repository.UserRepository">
+<resultMap id="User_Result_Map" type="com.example.domain.User">
+  <result  column="name" property="name" jdbcType="VARCHAR"/>
+   <result column="email" property="email" jdbcType="VARCHAR"/>
+   <result column="password" property="password" jdbcType="VARCHAR"/>
+   <result column="authority" property="authority" jdbcType="INTEGER"/>
+   <result column="storeId" property="store_id" jdbcType="INTEGER"/>
+   <result column="store_id" property="store_id" jdbcType="INTEGER"/>
+   <result column="enabled" property="enabled" jdbcType="INTEGER"/>
+   <result column="zipcode" property="zipcode" jdbcType="VARCHAR"/>
+   <result column="address" property="address" jdbcType="VARCHAR"/>
+   <result column="telephone" property="telephone" jdbcType="VARCHAR"/>
+ </resultMap>
+
+<!-- ユーザー登録 -->
+<insert id="inserUser" parameterType="com.example.domain.User">
+Insert INTO users (name,email,password,authority,zipcode,address,telephone,store_id,enabled) VALUES(#{name},#{email},#{password},#{authority},#{zipcode},#{address},#{telephone},#{storeId},#{enabled});
+</insert>
+
+<!-- メールアドレス重複チェック -->
+<select id="findByEmail" resultType="com.example.domain.User"  parameterType="map">
+SELECT id,name,email,password,zipcode,address,telephone,authority,store_id,enabled FROM users WHERE email=#{email};
+</select>
+
+
+</mapper>

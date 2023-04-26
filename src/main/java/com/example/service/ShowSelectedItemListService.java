@@ -34,14 +34,28 @@ public class ShowSelectedItemListService {
 	public List<Item> showSelectedItemList(SelectItemForm form) {
 		Integer maxDepth = categoryRepository.findMaxDepth(); 
 		Category category = new Category();
-		if (form.getGrandChildCategoryId() != null) {
-			category = categoryRepository.findCategoryById(form.getGrandChildCategoryId());
-		} else if (form.getChildCategoryId() != null) {
-			category = categoryRepository.findCategoryById(form.getChildCategoryId());
-		} else if (form.getParentCategoryId() != null) {
-			category = categoryRepository.findCategoryById(form.getParentCategoryId());
-		}
+		if (form.getGrandChildCategoryId() != 0) {
+			category = categoryRepository.load(form.getGrandChildCategoryId());
+		} else if (form.getChildCategoryId() != 0) {
+			category = categoryRepository.load(form.getChildCategoryId());
+		} else if (form.getParentCategoryId() != 0) {
+			category = categoryRepository.load(form.getParentCategoryId());
+		}else {category.setId(0);}
 		List<Item> selectedItemList = itemRepository.findAllItem(maxDepth, 1, form.getItemName(), category,form.getBrand(), form.getSort());
+		return selectedItemList;
+	}
+	
+	public List<Item> sortByCategory(Integer selectedCategory) {
+		Integer maxDepth = categoryRepository.findMaxDepth(); 
+		Category category = categoryRepository.load(selectedCategory);
+		List<Item> selectedItemList = itemRepository.findAllItem(maxDepth, 1,"", category,"","");
+		return selectedItemList;
+	}
+	
+	public List<Item> sortByBrand(String brand) {
+		Integer maxDepth = categoryRepository.findMaxDepth(); 
+		Category category=new Category();
+		List<Item> selectedItemList = itemRepository.findAllItem(maxDepth, 1,"", category,brand,"");
 		return selectedItemList;
 	}
 }

@@ -36,7 +36,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	 */
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		User user = userRepository.findByMailAddress(email);
+		User user = userRepository.findByEmail(email);
 		if (user == null) {
 			throw new UsernameNotFoundException("そのEmailは登録されています。");
 			// 権限付与の例

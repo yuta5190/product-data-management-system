@@ -1,3 +1,4 @@
+
 package com.example.service;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ import com.example.repository.ItemRepository;
  */
 @Service
 @Transactional
-public class AddItemService {
+public class ResisterItemService {
 	@Autowired
 	public ItemRepository itemRepository;
 
