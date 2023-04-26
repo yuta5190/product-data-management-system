@@ -1,6 +1,7 @@
 package com.example.domain;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,7 +63,7 @@ public class Item {
 		this.itemImage = itemImage;
 		this.insertDate = insertDate;
 		this.insertUser = insertUser;
-		this.categoryDetail = categoryDetail;
+		this.categoryDetail = new ArrayList<>(categoryDetail);
 	}
 
 	public Integer getId() {
@@ -178,11 +179,11 @@ public class Item {
 	}
 
 	public List<Category> getCategoryDetail() {
-		return categoryDetail;
+	  return new ArrayList<>(categoryDetail);
 	}
 
 	public void setCategoryDetail(List<Category> categoryDetail) {
-		this.categoryDetail = categoryDetail;
+		this.categoryDetail = new ArrayList<>(categoryDetail);
 	}
 
 	@Override

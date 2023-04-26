@@ -6,8 +6,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/**
+ * ユーザー情報登録
+ * @author yoshida_yuuta
+ *
+ */
 public class InsertUserForm {
-/**名前*/
+    /**名前*/
 	@NotBlank(message="Please enter your name")
 	private String name;
 	/** メールアドレス */

@@ -1,5 +1,6 @@
 package com.example.form;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -154,11 +155,11 @@ public class UpdateItemForm {
 	}
 
 	public List<Category> getCategoryDetail() {
-		return categoryDetail;
+		return   new ArrayList<>(categoryDetail);
 	}
 
 	public void setCategoryDetail(List<Category> categoryDetail) {
-		this.categoryDetail = categoryDetail;
+		this.categoryDetail = new ArrayList<>(categoryDetail);
 	}
 
 	public Integer getParentCategory() {

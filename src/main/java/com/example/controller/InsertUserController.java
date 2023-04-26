@@ -16,19 +16,41 @@ import com.example.domain.User;
 import com.example.form.InsertUserForm;
 import com.example.service.ResisterUserService;
 
+/**
+ * ユーザー登録コントローラー
+ * @author yoshida_yuuta
+ *
+ */
 @Controller
 @RequestMapping("/insert-user")
 public class InsertUserController {
 	@Autowired
 	private ResisterUserService resisterUserService;
+	/**
+	 * 
+	 */
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	/**
+	 * ユーザー登録画面表示
+	 * @param form　登録情報
+	 * @param model　モデル
+	 * @return　登録画面
+	 */
 	@GetMapping("")
 	public String index(InsertUserForm form, Model model) {
 		return "register";
 	}
 
+	/**
+	 * ユーザー登録
+	 * @param form　ユーザー登録情報
+	 * @param result　エラー情報
+	 * @param redirectAttributes　リダイレクト時入力情報引継ぎ
+	 * @param model　モデル
+	 * @return　商品一覧画面
+	 */
 	@PostMapping("/insert")
 	public String insert(@Validated InsertUserForm form, BindingResult result, RedirectAttributes redirectAttributes,
 			Model model) {
@@ -46,7 +68,7 @@ public class InsertUserController {
 			result.addError(fieldError);
 		}
 
-		/** エラーが発生したら登録画面にリターンします. */
+		/** エラーが発生したら登録画面にリターンする. */
 		if (result.hasErrors()) {
 			return index(form, model);
 		}

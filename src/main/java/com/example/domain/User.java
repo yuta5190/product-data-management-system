@@ -1,15 +1,30 @@
 package com.example.domain;
 
+/**
+ * ユーザードメイン
+ * @author yoshida_yuuta
+ *
+ */
 public class User {
+	/**id*/
 	private Integer id;
+	/**名前*/
 	private String name;
+	/**メールアドレス*/
 	private String email;
+	/**パスワード*/
 	private String password;
+	/**店舗Id*/
 	private Integer storeId;
+	/**権限*/
 	private Integer authority;
+	/**郵便番号*/
 	private String zipcode;
+	/**住所*/
 	private String address;
+	/**電話番号*/
 	private String telephone;
+	/**認証情報*/
 	private boolean enabled = true;
 
 	public User() {
@@ -28,6 +43,19 @@ public class User {
 		this.address = address;
 		this.telephone = telephone;
 		this.enabled = enabled;
+	}
+
+	public User(User user) {
+	    this.id = user.getId();
+	    this.name = user.getName();
+	    this.email = user.getEmail();
+	    this.password = user.getPassword();
+	    this.storeId = user.getStoreId();
+	    this.authority = user.getAuthority();
+	    this.zipcode = user.getZipcode();
+	    this.address = user.getAddress();
+	    this.telephone = user.getTelephone();
+	    this.enabled = user.isEnabled();
 	}
 
 	public Integer getId() {
