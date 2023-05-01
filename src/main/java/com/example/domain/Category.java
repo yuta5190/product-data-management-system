@@ -21,6 +21,11 @@ public class Category {
 
 	public Category() {
 	}
+	
+
+	public Category(Integer id) {
+		this.id = id;
+	}
 
 	public Category(Integer id, Integer parentId, Integer childId, String categoryName, Integer hierarchy,
 			String categoryRoot) {

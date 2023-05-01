@@ -8,17 +8,17 @@ package com.example.form;
  */
 public class SelectItemForm {
 	/** 検索ワード */
-	private String itemName;
+	private String itemName="";
 	/** 大カテゴリー */
-	private Integer parentCategoryId;
+	private Integer parentCategoryId=0;
 	/** 中カテゴリー */
-	private Integer childCategoryId;
+	private Integer childCategoryId=0;
 	/** 小カテゴリー */
-	private Integer grandChildCategoryId;
+	private Integer grandChildCategoryId=0;
 	/** ブランド名 */
-	private String brand;
+	private String brand="";
 	/** 並び順 */
-	private String sort;
+	private String sort="";
 
 	public SelectItemForm() {
 	}

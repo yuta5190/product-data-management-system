@@ -5,11 +5,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,7 +22,6 @@ import com.example.form.SelectItemForm;
 import com.example.service.PagingService;
 import com.example.service.SelectCategoryService;
 import com.example.service.ShowItemListService;
-import com.example.service.ShowSelectedItemListService;
 
 
 /**
@@ -33,9 +34,7 @@ import com.example.service.ShowSelectedItemListService;
 @RequestMapping("/showitemlist")
 public class ShowItemListController {
 	@Autowired
-	private ShowItemListService showItemlistService;
-	@Autowired
-	private ShowSelectedItemListService showSelectedItemListService;
+	private ShowItemListService showItemListService;
 	@Autowired
 	private SelectCategoryService selectCategoryService;
 	@Autowired
@@ -49,14 +48,16 @@ public class ShowItemListController {
 	 */
 	@GetMapping("")
 	public String index(Model model, SelectItemForm form) {
-		List<Category> parentCategoryList = selectCategoryService.viewParentCategory();
+		List<Category> parentCategoryList = selectCategoryService.selectParentCategory();
+		Integer totalPage = pagingService.totalPageCount(form);
 		model.addAttribute("parentCategoryList", parentCategoryList);
-		List<Item> itemList = showItemlistService.showItemList(1, "", 0, 0, 0, "", 1000, "");
-		model.addAttribute("itemList", itemList);
-		Category a = new Category();
-		Category b = new Category();
-		model.addAttribute("childCategory", a);
-		model.addAttribute("grandChildCategory", b);
+		
+		Optional<List<Item>> itemList = showItemListService.showItemList(form,1,totalPage);
+		model.addAttribute("itemList",itemList.get());
+		
+		Category emptyCategoryList = new Category();
+		model.addAttribute("childCategory", emptyCategoryList);
+		model.addAttribute("grandChildCategory", emptyCategoryList);
 		return "list";
 	}
 
@@ -65,19 +66,12 @@ public class ShowItemListController {
 	 * 
 	 * @return １ページ目表示に関わるJavaScript
 	 */
-	@GetMapping("/viewlist")
+	@GetMapping("/showfirstitemlist")
 	@ResponseBody
-	public Map<String, Object> viewList(String search, Integer parentCategory, Integer childCategory,
-			Integer grandChildCategory, String brand) {
-		if (search == null) {
-			search = "";
-		}
-		if (brand == null) {
-			brand = "";
-		}
+	public Map<String, Object> showFirstItemList(@ModelAttribute SelectItemForm form) {
+		
 		Map<String, Object> firstPageData = new HashMap<>();
-		Integer totalPage = pagingService.totalPageCount(search, parentCategory, childCategory, grandChildCategory,
-				brand);
+		Integer totalPage = pagingService.totalPageCount(form);
 		firstPageData.put("totalPage", totalPage);
 		return firstPageData;
 	}
@@ -90,20 +84,8 @@ public class ShowItemListController {
 	 */
 	@GetMapping("/paging")
 	@ResponseBody
-	public Map<String, Object> paging(Integer page, String search, Integer parentCategory, Integer childCategory,
-			Integer grandChildCategory, String brand, Integer totalPage, String orderBy) {
-		if (search == null) {
-			search = "";
-		}
-		if (brand == null) {
-			brand = "";
-		}
-		if (orderBy == null) {
-			orderBy = "";
-		}
-		
-		List<Item> itemList = showItemlistService.showItemList(page, search, parentCategory, childCategory,
-				grandChildCategory, brand, totalPage, orderBy);
+	public Map<String, Object> paging(Integer page, @ModelAttribute SelectItemForm form, Integer totalPage) {
+		Optional<List<Item>> itemList = showItemListService.showItemList( form,page, totalPage);
 		Map<String, Object> data = new HashMap<>();
 		data.put("itemList", itemList);
 		return data;
@@ -116,13 +98,10 @@ public class ShowItemListController {
 	 * @param model モデル
 	 * @return 商品一覧表示画面
 	 */
-	@PostMapping("/select")
-	public String select(SelectItemForm form, Model model) {
-		List<Item> itemList = new ArrayList<>();
-		itemList = showSelectedItemListService.showSelectedItemList(form);
+	@PostMapping("/sort")
+	public String Sort(SelectItemForm form, Model model) {
 		
-		List<Category> parentCategoryList = selectCategoryService.viewParentCategory();
-		
+		List<Category> parentCategoryList = selectCategoryService.selectParentCategory();
 		Category childCategory = new Category();
 		Category grandChildCategory = new Category();
 		if (form.getChildCategoryId() != 0) {
@@ -131,14 +110,17 @@ public class ShowItemListController {
 		if (form.getGrandChildCategoryId() != 0) {
 			grandChildCategory = selectCategoryService.selectCategoryById(form.getGrandChildCategoryId());
 		}
-		model.addAttribute("itemList", itemList);
-		model.addAttribute("selectItemForm", form);
 		model.addAttribute("parentCategoryList", parentCategoryList);
 		model.addAttribute("childCategory", childCategory);
 		model.addAttribute("grandChildCategory", grandChildCategory);
-		if (itemList.isEmpty()) {
-			model.addAttribute("empty", "該当する商品はありません");
-		}
+		
+		
+		Integer totalPage = pagingService.totalPageCount(form);
+		Optional<List<Item>> itemList = showItemListService.showItemList(form,1,totalPage);
+		model.addAttribute("itemList", itemList.isPresent() ? itemList.get() : new ArrayList<>());
+		
+		model.addAttribute("selectItemForm", form);
+	
 		return "list";
 	}
 
@@ -152,49 +134,46 @@ public class ShowItemListController {
 	@GetMapping("/sortbycategory")
 	public String sortByCategory(Model model, Integer categoryId, Integer hierarchy) {
 		
-		
 		SelectItemForm form = new SelectItemForm();
-		List<Item> itemList = new ArrayList<>();
-		Category firstcategory = new Category();
-		
-		firstcategory.setId(categoryId);
-		
-		/**アイテム情報取得*/
-		itemList = showSelectedItemListService.sortByCategory(categoryId);
-		
+	
 		/**検索フォームのカテゴリータブ情報*/
-		List<Category> parentCategoryList = selectCategoryService.viewParentCategory();
+		List<Category> parentCategoryList = selectCategoryService.selectParentCategory();
+		model.addAttribute("parentCategoryList", parentCategoryList);
 		
 		/**検索情報を引き継ぐ*/
-		List<Category> list = new ArrayList<>();
-		list.add(firstcategory);
-		Integer newcategoryId = categoryId;
-		for (int i = 1; i < hierarchy; i++) {
-			Category category = selectCategoryService.searchParentCategory(newcategoryId);
-			list.add(category);
-			newcategoryId = category.getId();
-		}
-		Collections.reverse(list);
-		Category childCategory = new Category();
-		childCategory.setId(0);
-		Category grandChildCategory = new Category();
-		grandChildCategory.setId(0);
-		form.setParentCategoryId(categoryId);
-		form.setParentCategoryId(list.get(0).getId());
-		if (list.size() > 1) {
-			childCategory = selectCategoryService.selectCategoryById(list.get(1).getId());
-			form.setChildCategoryId(list.get(1).getId());
-		}
-		model.addAttribute("childCategory", childCategory);
-		if (list.size() > 2) {
-			grandChildCategory = selectCategoryService.selectCategoryById(list.get(2).getId());
-			form.setGrandChildCategoryId(list.get(2).getId());
-		}
+		//大カテゴリー
+		List<Category> categoryList = new ArrayList<>();
+		Category sortcategory = new Category(categoryId);
+		categoryList.add(sortcategory);
 		
+		
+		Integer newCategoryId = categoryId;
+		for (int i = 1; i < hierarchy; i++) {
+			Category category = selectCategoryService.searchParentCategory(newCategoryId);
+			categoryList.add(category);
+			newCategoryId = category.getId();
+		}
+		Collections.reverse(categoryList);
+		
+		//大カテゴリー
+		form.setParentCategoryId( categoryList.get(0).getId() );
+		
+		//中カテゴリー
+		Category childCategory = (categoryList.size() > 1) ? selectCategoryService.selectCategoryById(categoryList.get(1).getId()) :new Category(0);
+		form.setChildCategoryId(childCategory.getId());
+		model.addAttribute("childCategory", childCategory);
+		
+		//小カテゴリー
+		Category grandChildCategory = (categoryList.size() > 2) ? selectCategoryService.selectCategoryById(categoryList.get(2).getId()) :new Category(0);
+		form.setGrandChildCategoryId(grandChildCategory.getId());
 		model.addAttribute("grandChildCategory", grandChildCategory);
-		model.addAttribute("itemList", itemList);
+	
+	
+		/**アイテム情報取得*/
+		Optional<List<Item>> itemList = showItemListService.sortByCategory(categoryId);
+		model.addAttribute("itemList", itemList.isPresent() ? itemList.get() : new ArrayList<>());
 		model.addAttribute("selectItemForm", form);
-		model.addAttribute("parentCategoryList", parentCategoryList);
+	
 		return "list";
 	}
 
@@ -208,12 +187,12 @@ public class ShowItemListController {
 	public String sortByBrand(Model model, String brand) {
 		SelectItemForm form = new SelectItemForm();
 		form.setBrand(brand);
-		List<Item> itemList = new ArrayList<>();
-		itemList = showSelectedItemListService.sortByBrand(brand);
-		List<Category> parentCategoryList = selectCategoryService.viewParentCategory();
+		
+		Optional<List<Item>> itemList = showItemListService.sortByBrand(brand);
+		List<Category> parentCategoryList = selectCategoryService.selectParentCategory();
 		Category emptyCategory = new Category();
 		model.addAttribute("selectItemForm", form);
-		model.addAttribute("itemList", itemList);
+		model.addAttribute("itemList", itemList.isPresent() ? itemList.get() : new ArrayList<>());
 		model.addAttribute("parentCategoryList", parentCategoryList);
 		model.addAttribute("childCategory", emptyCategory);
 		model.addAttribute("grandChildCategory", emptyCategory);

@@ -32,9 +32,9 @@ $(document).ready(function() {
 	orderBy = $('#sort').val();
 	brand = $('#brand').val();
 	$.ajax({
-		url: 'http://localhost:8080/showitemlist/viewlist',
+		url: 'http://localhost:8080/showitemlist/showfirstitemlist',
 		type: 'GET',
-		data: { search: search, parentCategory: parentCategory, childCategory: childCategory, grandChildCategory: grandChildCategory, brand: brand },
+		data: {itemName: search, parentCategoryId: parentCategory, childCategoryId: childCategory, grandChildCategoryId: grandChildCategory, brand: brand },
 		dataType: "json",
 		success: function(data) {
 			totalPage = data.totalPage;
@@ -67,7 +67,7 @@ $(function() {
 		$.ajax({
 			url: 'http://localhost:8080/showitemlist/paging',
 			type: 'GET',
-			data: { page: page, search: search, parentCategory: parentCategory, childCategory: childCategory, grandChildCategory: grandChildCategory, brand: brand, totalPage: totalPage, orderBy: orderBy },
+			data: { page: page,itemName: search, parentCategoryId: parentCategory, childCategoryId: childCategory, grandChildCategoryId: grandChildCategory, brand: brand, sort: orderBy },
 			dataType: 'json',
 			success: function(data) {
 				console.log(page)
@@ -119,7 +119,7 @@ $(function() {
 		$.ajax({
 			url: 'http://localhost:8080/showitemlist/paging',
 			type: 'GET',
-			data: { page: page, search: search, parentCategory: parentCategory, childCategory: childCategory, grandChildCategory: grandChildCategory, brand: brand, totalPage: totalPage, orderBy: orderBy },
+			data: { page: page,itemName: search, parentCategoryId: parentCategory, childCategoryId: childCategory, grandChildCategoryId: grandChildCategory, brand: brand , totalPage: totalPage, sort: orderBy },
 			dataType: 'json',
 			success: function(data) {
 
@@ -179,7 +179,7 @@ $(function() {
 			$.ajax({
 				url: 'http://localhost:8080/showitemlist/paging',
 				type: 'GET',
-				data: { page: page, search: search, parentCategory: parentCategory, childCategory: childCategory, grandChildCategory: grandChildCategory, brand: brand, totalPage: totalPage, orderBy: orderBy },
+				data: { page: page,itemName: search, parentCategoryId: parentCategory, childCategoryId: childCategory, grandChildCategoryId: grandChildCategory, brand: brand , totalPage: totalPage, sort: orderBy },
 				dataType: 'json',
 				success: function(data) {
 					

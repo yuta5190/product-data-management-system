@@ -24,8 +24,8 @@ import com.example.service.EditItemService;
  *
  */
 @Controller
-@RequestMapping("/updateitem")
-public class UpdateItemController {
+@RequestMapping("/edit")
+public class EditItemController {
 	@Autowired
 	public SortItemService showItemDetail;
 	@Autowired
@@ -56,7 +56,7 @@ public class UpdateItemController {
 		if (item.getItemImage() == null || item.getItemImage().equals("")) {
 			form.setItemImageName("noimage-760x460.png");
 		}
-		List<Category> parentCategoryList = selectCategory.viewParentCategory();
+		List<Category> parentCategoryList = selectCategory.selectParentCategory();
 		model.addAttribute("parentCategoryList", parentCategoryList);
 		Category parentCategory =item.getCategoryDetail().get(0);
 		Category childCategory =item.getCategoryDetail().get(1);
@@ -77,8 +77,8 @@ public class UpdateItemController {
 	 * @return　商品詳細画面
 	 * @throws IOException
 	 */
-	@PostMapping("/update")
-	public String update(@ModelAttribute UpdateItemForm form) throws IOException {
+	@PostMapping("/edititem")
+	public String editItem(@ModelAttribute UpdateItemForm form) throws IOException {
 		editItemService.updateItem(form);
 		return "redirect:/showitemdetail?id=" + form.getId();
 	}
