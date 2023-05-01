@@ -36,7 +36,7 @@ public class SecurityConfig {
 		// 認可に関する設定
 		http.authorizeHttpRequests()
 				.requestMatchers("/", "/login-user","/login-user/**", "/insert-user", "/insert-user/insert",
-						"/registerUser", "/registerUser/register", "/showitemlist", "/showitemlist/**")
+						"/registerUser", "/registerUser/register", "/showitemlist", "/showitemlist/**","/showcategorylist","/showcategorylist/**")
 				.permitAll().anyRequest().authenticated();
 
 		// ログインに関する設定

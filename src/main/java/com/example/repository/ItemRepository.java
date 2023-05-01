@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -33,7 +34,7 @@ public class ItemRepository {
 	/**
 	 * 商品＋カテゴリーテーブル結合後用のマッパークラス
 	 */
-	private static final ResultSetExtractor<List<Item>> ALLITEM_RESULT_SET_EXTRACTOR = (rs) -> {
+	private static final ResultSetExtractor<Optional<List<Item>>> ALLITEM_RESULT_SET_EXTRACTOR = (rs) -> {
 		List<Item> itemList=new ArrayList<>();
 		while (rs.next()) {
 		Item item = new Item();
@@ -59,8 +60,9 @@ public class ItemRepository {
 			categoryList.add(category);
 		}
 		item.setCategoryDetail(categoryList);
-		itemList.add(item);}
-		return itemList;}
+		itemList.add(item);
+		}
+		return Optional.ofNullable(itemList.isEmpty() ? null : itemList);}
 	;
 
 	private static final RowMapper<Integer> COUNT_ROW_MAPPER = (rs, i) -> {
@@ -80,16 +82,16 @@ public class ItemRepository {
 	}
 
 	/**
-	 * ページに紐づく全件検索(1pに1000件)
+	 * ページに紐づく全件検索(1pに100件)
 	 * 
 	 * @param maxDepth 最大カテゴリー階層
 	 * @param page     表示ページ
 	 * @return ページに紐づく商品情報
 	 */
-	public List<Item> findAllItem(Integer maxDepth, Integer page, String itemName, Category category,
+	public Optional<List<Item>> findAllItem(Integer maxDepth, Integer page, String itemName, Category category,
 			String brand, String orderBy) {
 		maxCategoryDepth = maxDepth;
-		if (orderBy.equals("") || orderBy == null) {
+		if (orderBy.equals("")) {
 			orderBy = "item.id";
 		}
 		
@@ -161,7 +163,7 @@ public class ItemRepository {
 		paramMap.put("page", 1 + (page - 1) * 100);
 
 		/** 入れる要素 終了 */
-		List<Item> itemList = template.query(sql.toString(), paramMap, ALLITEM_RESULT_SET_EXTRACTOR);
+		Optional<List<Item>> itemList = template.query(sql.toString(), paramMap, ALLITEM_RESULT_SET_EXTRACTOR);
 		return itemList;
 	}
 
@@ -233,8 +235,8 @@ public class ItemRepository {
 		String sql = "Select item.id, item.store_id, item.name, item.condition, item.category, item.brand, item.price, item.shipping, item.description, item.item_image, item.insert_date, item.insert_user,cate.hierarchy AS hierarchy,category0.category_name AS category_name_0, category0.id AS category_id_0,category1.category_name AS category_name_1, category1.id AS category_id_1,category2.category_name AS category_name_2, category2.id AS category_id_2,category3.category_name AS category_name_3, category3.id AS category_id_3,category4.category_name AS category_name_4, category4.id AS category_id_4 FROM items AS item LEFT JOIN categorys AS category0 ON item.category=category0.id LEFT JOIN categorytree AS categorytree0 ON category0.id = categorytree0.child_id LEFT join categorys AS category1 ON categorytree0.parent_id=category1.id LEFT JOIN categorytree AS categorytree1 ON category1.id = categorytree1.child_id left join categorys AS category2 ON categorytree1.parent_id=category2.id LEFT JOIN categorytree AS categorytree2 ON category2.id = categorytree2.child_id LEFT join categorys AS category3 ON categorytree2.parent_id=category3.id LEFT JOIN categorytree AS categorytree3 ON category3.id = categorytree3.child_id  LEFT join categorys AS category4 ON categorytree3.parent_id=category4.id LEFT JOIN categorytree AS categorytree4 ON category4.id = categorytree4.child_id\r\n"
 				+ "		 LEFT JOIN categorys AS cate ON item.category=cate.id  WHERE  categorytree0.depth=1 AND categorytree0.depth=1 AND categorytree1.depth=1 AND categorytree1.depth=1 AND item.id=:id;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-		List<Item> itemList = template.query(sql, param, ALLITEM_RESULT_SET_EXTRACTOR);
-		return itemList.get(0);
+		Optional<List<Item>> itemList = template.query(sql, param, ALLITEM_RESULT_SET_EXTRACTOR);
+		return itemList.get().get(0);
 	}
 
 	/**

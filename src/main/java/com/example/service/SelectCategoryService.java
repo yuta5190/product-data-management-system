@@ -35,7 +35,7 @@ public class SelectCategoryService {
 	 * 大カテゴリーの表示
 	 * @return　大カテゴリーリスト
 	 */
-	public List<Category> viewParentCategory() {
+	public List<Category> selectParentCategory() {
 		
 		List<Category> parentCategoryList = categoryRepository.findAllParentCategory();
 		return parentCategoryList;
@@ -46,7 +46,7 @@ public class SelectCategoryService {
 	 * @param parentId　選択した大カテゴリー
 	 * @return　中カテゴリーリスト
 	 */
-	public List<Category> viewCategory(int id,int hierarchy) {
+	public List<Category> selectCategory(int id,int hierarchy) {
 		List<CategoryTree> categoryTrees= categoryRepository.findChildCategoryList(id, hierarchy);
 		List<Category> categoryList=new ArrayList<>();
 	    for(CategoryTree categoryTree:categoryTrees) {

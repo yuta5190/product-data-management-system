@@ -48,7 +48,7 @@
 	<div id="main" class="container-fluid">
 		<!-- addItem link -->
 		<div id="addItemButton">
-			<form th:action="@{/additem/view}" method="get">
+			<form th:action="@{/add}" method="get">
 				<button type="submit" class="btn btn-default">
 					<i class="fa fa-plus-square-o"></i> Add New Item
 				</button>
@@ -58,7 +58,7 @@
 
 		<!-- 検索フォーム -->
 		<div id="forms">
-			<form class="form-inline" role="form" th:action="@{/showitemlist/select}" th:object="${selectItemForm}" method="post">
+			<form class="form-inline" role="form" th:action="@{/showitemlist/sort}" th:object="${selectItemForm}" method="post">
 				<div class="form-group">
 					<input type=text class="form-control" id="name" placeholder="item name" th:field="*{itemName}" />
 				</div>

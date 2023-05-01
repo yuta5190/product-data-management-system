@@ -14,7 +14,7 @@ $(document).ready(function() {
 			let selectedOption = $('#parentCategory').val();
 			// Javaにデータを送信
 			$.ajax({
-				url: 'http://localhost:8080/additem/viewchildcategory',
+				url: 'http://localhost:8080/showcategorylist/viewchildcategory',
 				type: 'GET',
 				dataType: "json",
 				data: { id: selectedOption },
@@ -48,7 +48,7 @@ $(document).ready(function() {
 			
 			// Javaにデータを送信
 			$.ajax({
-				url: 'http://localhost:8080/additem/viewchildcategory',
+				url: 'http://localhost:8080/showcategorylist/viewchildcategory',
 				type: 'GET',
 				dataType: "json",
 				data: { id: selectedOption },
