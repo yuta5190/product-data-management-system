@@ -7,6 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.domain.Category;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 /**
  * 商品更新用フォーム
  * 
@@ -19,18 +22,22 @@ public class UpdateItemForm {
 	/** 店舗名 */
 	private Integer storeId;
 	/** 商品名 */
+	@NotBlank(message="Please enter text")
 	private String name;
 	/** 商品状態 */
 	private Integer condition;
 	/** 商品カテゴリー */
 	private Integer category;
 	/** ブランド名 */
+	@NotBlank(message="Please enter text")
 	private String brand;
 	/** 価格 */
+	@NotNull(message="Please enter text")
 	private double price;
 	/** 販売状況 */
 	private Integer shipping;
 	/** 詳細 */
+	@NotBlank(message="Please enter text")
 	private String description;
 	/** 商品画像 */
 	private MultipartFile itemImage;

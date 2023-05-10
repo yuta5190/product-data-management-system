@@ -3,6 +3,7 @@ package com.example.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ public class ShowCategoryController {
 	@GetMapping("/viewchildcategory")
 	@ResponseBody
 	public Map<String, Object> viewChildCategory(@RequestParam int id) {
+		Objects.requireNonNull(id, "/showcategorylist/viewchildcategory: id must not be null");
 		List<Category> childCategoryList = selectCategoryService.selectCategory(id, 1);
 		Map<String, Object> data = new HashMap<>();
 		data.put("childCategoryList", childCategoryList);
@@ -43,6 +45,7 @@ public class ShowCategoryController {
 	@GetMapping("/viewgrandchildcategory")
 	@ResponseBody
 	public Map<String, Object> viewGrandChildCategory(int id) {
+		Objects.requireNonNull(id, "/showcategorylist/viewgrandchildcategory: id must not be null");
 		List<Category> grandChildCategoryList = selectCategoryService.selectCategory(id, 1);
 		Map<String, Object> granddata = new HashMap<>();
 		granddata.put("grandChildCategoryList", grandChildCategoryList);
