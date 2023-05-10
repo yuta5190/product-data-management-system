@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +86,8 @@ public class ShowItemListController {
 	@GetMapping("/paging")
 	@ResponseBody
 	public Map<String, Object> paging(Integer page, @ModelAttribute SelectItemForm form, Integer totalPage) {
+		Objects.requireNonNull(page, "/showitemlist/paging: page must not be null");
+		Objects.requireNonNull(totalPage, "/showitemlist/paging: totalPage must not be null");		
 		Optional<List<Item>> itemList = showItemListService.showItemList( form,page, totalPage);
 		Map<String, Object> data = new HashMap<>();
 		data.put("itemList", itemList);
@@ -133,7 +136,8 @@ public class ShowItemListController {
 	 */
 	@GetMapping("/sortbycategory")
 	public String sortByCategory(Model model, Integer categoryId, Integer hierarchy) {
-		
+		Objects.requireNonNull(categoryId, "/showitemlist/sortbycategory: categoryId must not be null");
+		Objects.requireNonNull(hierarchy, "/showitemlist/sortbycategory: hierarchy must not be null");
 		SelectItemForm form = new SelectItemForm();
 	
 		/**検索フォームのカテゴリータブ情報*/
@@ -185,6 +189,7 @@ public class ShowItemListController {
 	 */
 	@GetMapping("/sortbybrand")
 	public String sortByBrand(Model model, String brand) {
+		Objects.requireNonNull(brand, "/showitemlist/sortbybrand: brand must not be null");
 		SelectItemForm form = new SelectItemForm();
 		form.setBrand(brand);
 		

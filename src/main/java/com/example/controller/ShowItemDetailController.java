@@ -1,5 +1,9 @@
 package com.example.controller;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,9 +32,13 @@ public class ShowItemDetailController {
  */
 @GetMapping("")
 public String index(Model model,Integer id) {
-	Item item =sortItemService.showItemDetail(id);
+	Objects.requireNonNull(id, "/showitemdetail: id must not be null");
+	Optional<List<Item>> optitem =sortItemService.showItemDetail(id);
+	if(optitem.isPresent()){
+	Item item=optitem.get().get(0);
 	if(item.getItemImage()==null||item.getItemImage().equals("")) {item.setItemImage("noimage-760x460.png");}
 	model.addAttribute("Item",item);
 	return "detail";
-}
-}
+}else {return "redirect:/showitemlist";
+	}
+}}

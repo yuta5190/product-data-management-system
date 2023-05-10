@@ -2,10 +2,14 @@ package com.example.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +19,7 @@ import com.example.domain.Item;
 import com.example.form.UpdateItemForm;
 import com.example.service.SelectCategoryService;
 import com.example.service.SortItemService;
+
 import com.example.service.EditItemService;
 
 /**
@@ -43,7 +48,9 @@ public class EditItemController {
 	 */
 	@PostMapping("")
 	public String index(Model model, Integer id, UpdateItemForm form) {
-		Item item = showItemDetail.showItemDetail(id);
+		Objects.requireNonNull(id, "/edit: id must not be null");
+		Optional<List<Item>> optitem = showItemDetail.showItemDetail(id);
+		Item item = optitem.get().get(0);
 		form.setId(item.getId());
 		form.setName(item.getName());
 		form.setStoreId(item.getStoreId());
@@ -78,7 +85,10 @@ public class EditItemController {
 	 * @throws IOException
 	 */
 	@PostMapping("/edititem")
-	public String editItem(@ModelAttribute UpdateItemForm form) throws IOException {
+	public String editItem(Model model,@Validated @ModelAttribute UpdateItemForm form,BindingResult result) throws IOException {
+		if (result.hasErrors()) {
+			return index(model,form.getId(),form);
+		}
 		editItemService.updateItem(form);
 		return "redirect:/showitemdetail?id=" + form.getId();
 	}

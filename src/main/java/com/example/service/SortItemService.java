@@ -1,5 +1,8 @@
 package com.example.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +28,8 @@ public class SortItemService {
 	 * @param id 検索する商品id
 	 * @return 商品情報
 	 */
-	public Item showItemDetail(Integer id) {
-		Item item = itemRepository.load(id);
+	public Optional<List<Item>> showItemDetail(Integer id) {
+		Optional<List<Item>> item = itemRepository.load(id);
 		return item;
 	}
 }
